@@ -1,5 +1,5 @@
 const Product = require("../models/Product");
-const { verifyToken, verifyTokenAndAuth, verifyTokenAndAdmin } = require("./verifyToken");
+const { verifyTokenAndAdmin } = require("./verifyToken");
 const router = require("express").Router();
 
 //CREATE Product
@@ -16,7 +16,7 @@ router.post("/", verifyTokenAndAdmin, async (req, res) => {
 // UPDATE Product
 router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
   try {
-    const updatedProduct = await User.findByIdAndUpdate(
+    const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
       {
         $set: req.body,
@@ -73,32 +73,5 @@ router.get("/", async (req, res) => {
     res.status(500).json(err);
   }
 });
-
-// //GET User Stats
-// router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
-//   // get total number of users per month:
-//   const date = new Date();
-//   const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
-
-//   try {
-//     const data = await User.aggregate([
-//       { $match: { createdAt: { $gte: lastYear } } },
-//       {
-//         $project: {
-//           month: { $month: "$createdAt" },
-//         },
-//       },
-//       {
-//         $group: {
-//           _id: "$month",
-//           total: { $sum: 1 },
-//         },
-//       },
-//     ]);
-//     res.status(200).json(data);
-//   } catch (error) {
-//     res.status(500).json(error);
-//   }
-// });
 
 module.exports = router;
