@@ -2,9 +2,11 @@ const router = require("express").Router();
 const User = require("../models/User");
 const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
+const cors = require("cors");
 
 // REGISTER
-router.post("/register", async (req, res) => {
+router.post("/register", cors(), async (req, res) => {
+  // console.info("GET /register");
   const newUser = new User({
     username: req.body.username,
     email: req.body.email,
@@ -33,7 +35,8 @@ router.post("/register", async (req, res) => {
 });
 
 // LOGIN
-router.post("/login", async (req, res) => {
+router.post("/login", cors(), async (req, res) => {
+  console.info("POST /login");
   try {
     const user = await User.findOne({ username: req.body.username });
     !user && res.status(401).json("Incorrect credentials!");
