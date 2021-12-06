@@ -13,10 +13,21 @@ router.post("/register", async (req, res) => {
 
   try {
     const savedUser = await newUser.save();
-    console.log(savedUser);
-    res.status(201).json(savedUser);
+    // console.log(savedUser);
+    const accessToken = jwt.sign(
+      {
+        id: savedUser._id,
+        isAdmin: savedUser.isAdmin,
+      },
+      process.env.JWT_KEY,
+      { expiresIn: "3d" }
+    );
+
+    const { password, ...others } = savedUser._doc;
+    res.status(200).json({ others, accessToken });
+    // res.status(201).json(savedUser);
   } catch (err) {
-    console.log(err);
+    console.log(err, "Register user failed.");
     res.status(500).json(err);
   }
 });
